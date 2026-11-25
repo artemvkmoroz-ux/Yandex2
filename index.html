@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yandex2 — Найди больше</title>
+<style>
+/* ============ ПЕРЕМЕННЫЕ ТЕМ ============ */
+:root {
+  --bg: #ffffff;
+  --bg-2: #f7f7f8;
+  --bg-glass: rgba(255,255,255,0.72);
+  --text: #16181d;
+  --text-2: #5b616e;
+  --text-3: #9aa0ab;
+  --border: #e6e8ec;
+  --border-strong: #d3d7de;
+  --accent: #ff2d2d;
+  --accent-2: #ff6b3d;
+  --accent-glow: rgba(255,45,45,0.22);
+  --link: #1a0dab;
+  --url: #0a8f4c;
+  --mark: #ffe97a;
+  --shadow: 0 10px 40px rgba(20,22,28,0.10);
+  --shadow-sm: 0 2px 10px rgba(20,22,28,0.06);
+  --radius: 18px;
+}
+[data-theme="dark"] {
+  --bg: #0b0d12;
+  --bg-2: #12151d;
+  --bg-glass: rgba(18,21,29,0.72);
+  --text: #eef1f7;
+  --text-2: #a7aebd;
+  --text-3: #6a7181;
+  --border: #232834;
+  --border-strong: #2f3644;
+  --accent: #ff3b3b;
+  --accent-2: #ff7a4d;
+  --accent-glow: rgba(255,59,59,0.30);
+  --link: #8ab4ff;
+  --url: #4ade80;
+  --mark: #ffe066;
+  --shadow: 0 10px 50px rgba(0,0,0,0.55);
+  --shadow-sm: 0 2px 12px rgba(0,0,0,0.35);
+}
+
+/* ============ БАЗА ============ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; padding: 32px 20px 0;
+  transition: background .35s ease, color .35s ease;
+  overflow-x: hidden;
+}
+
+/* ============ ФОНОВОЕ СВЕЧЕНИЕ ============ */
+.aurora {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(600px 300px at 20% 0%, var(--accent-glow), transparent 60%),
+    radial-gradient(700px 400px at 85% 10%, rgba(255,107,61,0.16), transparent 65%),
+    radial-gradient(900px 500px at 50% 100%, rgba(138,180,255,0.12), transparent 70%);
+  filter: blur(20px);
+  transition: opacity .4s;
+}
+
+/* ============ ВЕРХНЯЯ ПАНЕЛЬ ============ */
+.topbar {
+  width: 100%; max-width: 1100px;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 56px;
+}
+.brand {
+  display: flex; align-items: center; gap: 12px; cursor: pointer;
+  user-select: none;
+}
+.logo-svg { width: 44px; height: 44px; filter: drop-shadow(0 6px 16px var(--accent-glow)); }
+.logo-text {
+  font-size: 26px; font-weight: 900; letter-spacing: -1px;
+  background: linear-gradient(120deg, var(--text) 30%, var(--accent) 70%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.logo-text sup {
+  font-size: 14px; color: var(--accent);
+  -webkit-text-fill-color: var(--accent);
+}
+.top-actions { display: flex; gap: 10px; }
+.icon-btn {
+  width: 42px; height: 42px; border-radius: 12px;
+  border: 1px solid var(--border); background: var(--bg-2);
+  color: var(--text); cursor: pointer; display: grid; place-items: center;
+  transition: .2s; font-size: 18px;
+}
+.icon-btn:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+
+/* ============ ГЕРОЙ ============ */
+.hero {
+  display: flex; flex-direction: column; align-items: center;
+  width: 100%; max-width: 720px; text-align: center;
+  transition: margin-top .5s ease;
+}
+.hero.compact { margin-top: -20px; }
+.tagline {
+  color: var(--text-2); font-size: 15px; margin-bottom: 30px;
+  letter-spacing: .2px;
+}
+
+/* ============ ПОИСКОВАЯ СТРОКА ============ */
+.search-wrap { position: relative; width: 100%; }
+.search-box {
+  display: flex; align-items: center; gap: 6px;
+  width: 100%; padding: 6px 6px 6px 22px;
+  background: var(--bg-glass); backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  border: 1.5px solid var(--border-strong); border-radius: 999px;
+  transition: .25s ease; box-shadow: var(--shadow-sm);
+}
+.search-box:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-glow), var(--shadow);
+  transform: translateY(-1px);
+}
+.search-icon { color: var(--text-3); font-size: 18px; flex-shrink: 0; }
+.search-box input {
+  flex: 1; padding: 14px 8px; border: none; background: transparent;
+  font-size: 17px; color: var(--text); outline: none; min-width: 0;
+  font-family: inherit;
+}
+.search-box input::placeholder { color: var(--text-3); }
+.search-btn {
+  padding: 12px 26px; border: none; border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff; font-size: 15px; font-weight: 700; cursor: pointer;
+  transition: .2s; white-space: nowrap; font-family: inherit;
+  box-shadow: 0 6px 20px var(--accent-glow);
+}
+.search-btn:hover { transform: translateY(-1px) scale(1.02); filter: brightness(1.08); }
+.search-btn:active { transform: scale(0.98); }
+
+/* ============ АВТОДОПОЛНЕНИЕ ============ */
+.suggestions {
+  position: absolute; top: calc(100% + 10px); left: 0; right: 0;
+  background: var(--bg-glass); backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid var(--border-strong); border-radius: 16px;
+  box-shadow: var(--shadow); overflow: hidden;
+  opacity: 0; transform: translateY(-6px); pointer-events: none;
+  transition: .2s ease; z-index: 50;
+}
+.suggestions.show { opacity: 1; transform: none; pointer-events: auto; }
+.suggestion {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 20px; cursor: pointer; color: var(--text);
+  font-size: 15px; transition: background .12s; border: none;
+  background: transparent; width: 100%; text-align: left; font-family: inherit;
+}
+.suggestion:hover, .suggestion.active { background: var(--bg-2); }
+.suggestion .sicon { color: var(--text-3); font-size: 14px; }
+.suggestion b { color: var(--accent); font-weight: 700; }
+
+/* ============ СТАТИСТИКА ============ */
+.stats { color: var(--text-3); font-size: 13px; margin: 16px 0 4px; }
+.results {
+  width: 100%; max-width: 720px; margin-top: 8px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+
+/* ============ КАРТОЧКА РЕЗУЛЬТАТА ============ */
+.result {
+  padding: 16px 20px; border-radius: 16px;
+  border: 1px solid transparent; transition: .18s;
+  animation: rise .35s cubic-bezier(.2,.8,.2,1) backwards;
+}
+@keyframes rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.result:hover {
+  background: var(--bg-2); border-color: var(--border);
+  box-shadow: var(--shadow-sm); transform: translateY(-1px);
+}
+.result a {
+  color: var(--link); text-decoration: none;
+  font-size: 18px; font-weight: 600; line-height: 1.4;
+}
+.result a:hover { text-decoration: underline; }
+.result .meta { display: flex; align-items: center; gap: 10px; margin: 4px 0 6px; flex-wrap: wrap; }
+.result .url { color: var(--url); font-size: 13px; }
+.result .badge {
+  font-size: 11px; padding: 2px 8px; border-radius: 999px;
+  background: var(--bg-2); border: 1px solid var(--border);
+  color: var(--text-2); font-weight: 600;
+}
+.result .snippet { color: var(--text-2); font-size: 14.5px; line-height: 1.6; }
+mark {
+  background: var(--mark); color: #3a2c00;
+  padding: 0 3px; border-radius: 4px; font-weight: 600;
+}
+
+/* ============ ПУСТО ============ */
+.empty {
+  color: var(--text-2); padding: 40px 20px; font-size: 15px;
+  text-align: center; border: 1px dashed var(--border-strong);
+  border-radius: var(--radius); margin-top: 12px;
+}
+.empty .big { font-size: 44px; display: block; margin-bottom: 12px; }
+
+/* ============ ПАНЕЛЬ КРАУЛЕРА ============ */
+.panel {
+  width: 100%; max-width: 720px; margin-top: 20px;
+  background: var(--bg-glass); backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--border-strong); border-radius: var(--radius);
+  padding: 20px; box-shadow: var(--shadow-sm);
+  display: none;
+}
+.panel.show { display: block; animation: rise .3s backwards; }
+.panel h3 { font-size: 16px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.crawl-row { display: flex; gap: 10px; margin-bottom: 14px; }
+.crawl-row input {
+  flex: 1; padding: 12px 16px; border-radius: 12px;
+  border: 1px solid var(--border-strong); background: var(--bg);
+  color: var(--text); font-size: 14px; outline: none; font-family: inherit;
+}
+.crawl-row input:focus { border-color: var(--accent); }
+.crawl-row button {
+  padding: 12px 20px; border: none; border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff; font-weight: 700; cursor: pointer; font-size: 14px; font-family: inherit;
+}
+.crawl-row button:hover { filter: brightness(1.08); }
+.crawl-log {
+  background: var(--bg-2); border-radius: 12px; padding: 12px 16px;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 12.5px; color: var(--text-2);
+  max-height: 200px; overflow-y: auto; line-height: 1.7;
+}
+.crawl-log .ok { color: var(--url); }
+.crawl-log .err { color: var(--accent); }
+.crawl-log .info { color: var(--link); }
+
+/* ============ ФУТЕР ============ */
+.footer {
+  margin-top: auto; padding: 40px 0 24px; color: var(--text-3);
+  font-size: 13px; text-align: center;
+}
+.footer b { color: var(--accent); }
+.dot { color: var(--border-strong); margin: 0 8px; }
+
+/* ============ СКРОЛЛБАР ============ */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
+/* ============ АДАПТИВ ============ */
+@media (max-width: 640px) {
+  body { padding: 20px 14px 0; }
+  .topbar { margin-bottom: 36px; }
+  .logo-text { font-size: 22px; }
+  .search-box { padding-left: 16px; }
+  .search-btn { padding: 11px 18px; font-size: 14px; }
+  .search-box input { font-size: 15px; }
+  .result a { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+<div class="aurora"></div>
+
+<!-- ============ TOPBAR ============ -->
+<div class="topbar">
+  <div class="brand" onclick="resetSearch()">
+    <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#ff2d2d"/>
+          <stop offset="100%" stop-color="#ff7a4d"/>
+        </linearGradient>
+        <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity=".95"/>
+          <stop offset="100%" stop-color="#ffffff" stop-opacity=".65"/>
+        </linearGradient>
+      </defs>
+      <rect x="4" y="4" width="92" height="92" rx="26" fill="url(#g1)"/>
+      <path d="M30 30 L50 56 L70 30" fill="none" stroke="url(#g2)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <line x1="50" y1="56" x2="50" y2="74" stroke="url(#g2)" stroke-width="9" stroke-linecap="round"/>
+      <circle cx="72" cy="28" r="6" fill="#fff"/>
+    </svg>
+    <div class="logo-text">Yandex<sup>2</sup></div>
+  </div>
+  <div class="top-actions">
+    <button class="icon-btn" id="crawlToggle" title="Краулер">🕷</button>
+    <button class="icon-btn" id="themeToggle" title="Сменить тему">🌙</button>
+  </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<div class="hero" id="hero">
+  <div class="tagline">Найди больше. Найди точнее.</div>
+  <div class="search-wrap">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="q" placeholder="Что ищем?" autofocus autocomplete="off">
+      <button class="search-btn" onclick="doSearch()">Найти</button>
+    </div>
+    <div class="suggestions" id="suggestions"></div>
+  </div>
+  <div class="stats" id="stats"></div>
+</div>
+
+<div class="results" id="results"></div>
+
+<!-- ============ КРАУЛЕР ============ -->
+<div class="panel" id="crawlPanel">
+  <h3>🕷 Краулер Yandex2 <span style="font-size:11px;color:var(--text-3);font-weight:400;">(симулятор)</span></h3>
+  <div class="crawl-row">
+    <input type="text" id="crawlUrl" placeholder="Введите URL или ключевое слово, например: python">
+    <button onclick="runCrawler()">Обойти</button>
+  </div>
+  <div class="crawl-log" id="crawlLog">Готов к обходу сайтов…</div>
+</div>
+
+<div class="footer">
+  <b>Yandex2</b> © 2026 <span class="dot">·</span>
+  Найди больше. Найди точнее. <span class="dot">·</span>
+  <span id="docCount"></span>
+</div>
+
+<script>
+/* ============================================================
+   1. БАЗА ЗНАНИЙ — реалистичные статьи
+   ============================================================ */
+let DOCUMENTS = [
+  { url: "https://ru.wikipedia.org/wiki/Python", title: "Python — язык программирования", category: "Википедия", content: "Python — высокоуровневый язык программирования общего назначения с динамической типизацией. Создан Гвидо ван Россумом в 1991 году. Широко используется в анализе данных, машинном обучении, веб-разработке и автоматизации. Библиотеки pandas, numpy, scikit-learn, TensorFlow." },
+  { url: "https://ru.wikipedia.org/wiki/JavaScript", title: "JavaScript — язык для веба", category: "Википедия", content: "JavaScript — мультипарадигменный язык программирования, поддерживающий объектно-ориентированный, императивный и функциональный стили. Работает в браузере, создаёт интерактивные страницы. Node.js позволяет использовать JavaScript на сервере." },
+  { url: "https://ru.wikipedia.org/wiki/Машинное_обучение", title: "Машинное обучение", category: "Википедия", content: "Машинное обучение — класс методов искусственного интеллекта, изучающий алгоритмы, способные обучаться на данных. Использует Python, R, библиотеки scikit-learn, TensorFlow, PyTorch. Применяется в рекомендательных системах, компьютерном зрении, обработке текста." },
+  { url: "https://habr.com/ru/articles/django", title: "Django: веб-фреймворк на Python", category: "Хабр", content: "Django — свободный веб-фреймворк на Python, следующий архитектуре MTV. Предоставляет ORM, админ-панель, маршрутизацию и защиту от типовых угроз. Flask — лёгкая альтернатива для небольших проектов и микросервисов." },
+  { url: "https://ru.wikipedia.org/wiki/Поисковая_система", title: "Как устроена поисковая система", category: "Википедия", content: "Поисковая система состоит из краулера, индексатора и ранжировщика. Инвертированный индекс ускоряет поиск по словам. Ранжирование использует алгоритмы BM25, TF-IDF, PageRank и нейросетевые модели для оценки релевантности." },
+  { url: "https://ru.wikipedia.org/wiki/Москва", title: "Москва — столица России", category: "Википедия", content: "Москва — столица Российской Федерации, крупнейший по численности населения город страны. Расположена на реке Москве. Красная площадь, Кремль, Большой театр, Третьяковская галерея — главные достопримечательности." },
+  { url: "https://ru.wikipedia.org/wiki/Санкт-Петербург", title: "Санкт-Петербург — культурная столица", category: "Википедия", content: "Санкт-Петербург — второй по величине город России, основан Петром I в 1703 году. Эрмитаж, Невский проспект, белые ночи привлекают миллионы туристов. Бывшая столица Российской империи." },
+  { url: "https://habr.com/ru/articles/git", title: "Git и GitHub для начинающих", category: "Хабр", content: "Git — распределённая система контроля версий, созданная Линусом Торвальдсом. GitHub — платформа для хранения кода и совместной работы. Основные команды: git clone, commit, push, pull, branch, merge." },
+  { url: "https://ru.wikipedia.org/wiki/HTML", title: "HTML и CSS — основы веба", category: "Википедия", content: "HTML — язык разметки гипертекста, основа веб-страниц. CSS — каскадные таблицы стилей для оформления. Flexbox и Grid — современные методы вёрстки адаптивных интерфейсов." },
+  { url: "https://habr.com/ru/articles/coffee", title: "Виды кофе: от эспрессо до рафа", category: "Хабр", content: "Эспрессо, американо, капучино, латте, флэт уайт, раф — основные виды кофе. Капучино готовится с молочной пенкой, латте — с большим количеством молока. Раф — кофе со сливками и сиропом." },
+  { url: "https://ru.wikipedia.org/wiki/Борщ", title: "Борщ — традиционный суп", category: "Википедия", content: "Борщ — традиционный славянский суп на основе свёклы. Классический рецепт включает капусту, мясо, картофель, морковь и сметану. Варится 2 часа, подаётся с чёрным хлебом и чесноком." },
+  { url: "https://ru.wikipedia.org/wiki/Пицца", title: "Пицца — символ Италии", category: "Википедия", content: "Пицца — итальянское блюдо в виде круглой лепёшки с начинкой. Классическая «Маргарита» готовится с томатами, моцареллой и базиликом. Тесто на дрожжах выпекается при 250 градусах." },
+  { url: "https://ru.wikipedia.org/wiki/Нейронная_сеть", title: "Нейронные сети", category: "Википедия", content: "Нейронная сеть — математическая модель, построенная по принципу биологических нейронных сетей. Глубокое обучение использует многослойные сети. Фреймворки: TensorFlow, PyTorch, Keras." },
+  { url: "https://habr.com/ru/articles/fastapi", title: "FastAPI — быстрый веб-фреймворк", category: "Хабр", content: "FastAPI — современный веб-фреймворк Python для создания API. Поддерживает асинхронность, автоматическую документацию OpenAPI, валидацию через Pydantic. Один из самых быстрых фреймворков." },
+  { url: "https://ru.wikipedia.org/wiki/Elasticsearch", title: "Elasticsearch", category: "Википедия", content: "Elasticsearch — распределённый поисковый движок на основе Apache Lucene. Использует инвертированный индекс и алгоритм BM25. Применяется для полнотекстового поиска, логов и аналитики." },
+];
+
+/* ============================================================
+   2. ПОИСКОВЫЙ ДВИЖОК: инвертированный индекс + TF-IDF
+   ============================================================ */
+let INDEX = {};
+let DOC_LENGTHS = {};
+
+function tokenize(text) {
+  return (text.toLowerCase().match(/[а-яёa-z0-9]+/gi) || []);
+}
+function stem(word) {
+  return word.replace(/(ями|ами|ов|ев|ий|ый|ая|ое|ые|ых|им|ем|ом|ах|ях|ую|юю|ой|ей|а|я|о|е|ы|и|у|ю)$/,'') || word;
+}
+
+function buildIndex() {
+  INDEX = {}; DOC_LENGTHS = {};
+  DOCUMENTS.forEach((doc, id) => {
+    const tokens = tokenize(doc.title + " " + doc.content + " " + (doc.category || ""));
+    DOC_LENGTHS[id] = tokens.length;
+    const freq = {};
+    tokens.forEach(t => {
+      const s = stem(t);
+      freq[s] = (freq[s] || 0) + 1;
+    });
+    for (const word in freq) {
+      if (!INDEX[word]) INDEX[word] = {};
+      INDEX[word][id] = freq[word];
+    }
+  });
+  document.getElementById('docCount').textContent = `В индексе: ${DOCUMENTS.length} документов`;
+}
+
+function search(query) {
+  const qTokens = tokenize(query).map(stem).filter(Boolean);
+  if (!qTokens.length) return [];
+  const scores = {};
+  const N = DOCUMENTS.length;
+
+  qTokens.forEach(word => {
+    if (!INDEX[word]) return;
+    const idf = Math.log((N + 1) / (Object.keys(INDEX[word]).length + 1)) + 1;
+    for (const docId in INDEX[word]) {
+      const tf = INDEX[word][docId] / DOC_LENGTHS[docId];
+      scores[docId] = (scores[docId] || 0) + tf * idf;
+    }
+  });
+
+  return Object.entries(scores)
+    .map(([id, score]) => ({ ...DOCUMENTS[id], id: +id, score }))
+    .sort((a, b) => b.score - a.score);
+}
+
+/* ============================================================
+   3. ПОДСВЕТКА
+   ============================================================ */
+function highlight(text, query) {
+  const words = tokenize(query).filter(w => w.length > 1);
+  if (!words.length) return text;
+  let result = text;
+  words.forEach(w => {
+    const re = new RegExp(`(${w}[а-яёa-z]*)`, 'gi');
+    result = result.replace(re, '<mark>$1</mark>');
+  });
+  return result;
+}
+
+/* ============================================================
+   4. UI: ПОИСК
+   ============================================================ */
+const resultsDiv = document.getElementById('results');
+const statsDiv = document.getElementById('stats');
+const heroEl = document.getElementById('hero');
+
+function doSearch() {
+  const q = document.getElementById('q').value.trim();
+  if (!q) return;
+  hideSuggestions();
+  heroEl.classList.add('compact');
+
+  const t0 = performance.now();
+  const found = search(q);
+  const t1 = performance.now();
+
+  if (!found.length) {
+    resultsDiv.innerHTML = `<div class="empty">
+      <span class="big">🔍</span>
+      По запросу «${q}» в Yandex2 ничего не найдено.<br>
+      Попробуйте: python, москва, кофе, поиск, django
+    </div>`;
+    statsDiv.textContent = '';
+    return;
+  }
+
+  statsDiv.textContent = `Найдено ${found.length} результат(ов) за ${(t1 - t0).toFixed(2)} мс`;
+
+  resultsDiv.innerHTML = found.map((r, i) => `
+    <div class="result" style="animation-delay:${i * 30}ms">
+      <a href="${r.url}" target="_blank" rel="noopener">
+        ${highlight(r.title, q)}
+      </a>
+      <div class="meta">
+        <span class="url">${r.url}</span>
+        <span class="badge">${r.category || 'Yandex2'}</span>
+        <span class="badge">релевантность ${r.score.toFixed(2)}</span>
+      </div>
+      <div class="snippet">${highlight(r.content.slice(0, 220), q)}…</div>
+    </div>
+  `).join('');
+}
+
+function resetSearch() {
+  document.getElementById('q').value = '';
+  resultsDiv.innerHTML = '';
+  statsDiv.textContent = '';
+  heroEl.classList.remove('compact');
+  document.getElementById('q').focus();
+}
+
+/* ============================================================
+   5. АВТОДОПОЛНЕНИЕ
+   ============================================================ */
+const sugBox = document.getElementById('suggestions');
+const qInput = document.getElementById('q');
+let sugTimer;
+
+function buildSuggestions(query) {
+  const q = query.toLowerCase().trim();
+  if (q.length < 1) { hideSuggestions(); return; }
+
+  const pool = new Set();
+  DOCUMENTS.forEach(d => {
+    tokenize(d.title + " " + d.content).forEach(w => { if (w.startsWith(q)) pool.add(w); });
+    if (d.title.toLowerCase().includes(q)) pool.add(d.title);
+  });
+
+  const list = [...pool].slice(0, 7);
+  if (!list.length) { hideSuggestions(); return; }
+
+  sugBox.innerHTML = list.map((s, i) => {
+    const re = new RegExp(`(${q})`, 'i');
+    const html = s.replace(re, '<b>$1</b>');
+    return `<button class="suggestion" data-i="${i}" data-val="${s.replace(/"/g,'&quot;')}">
+      <span class="sicon">🔎</span><span>${html}</span>
+    </button>`;
+  }).join('');
+  sugBox.classList.add('show');
+}
+
+function hideSuggestions() { sugBox.classList.remove('show'); }
+
+qInput.addEventListener('input', e => {
+  clearTimeout(sugTimer);
+  const v = e.target.value;
+  if (v.trim().length < 2) { resultsDiv.innerHTML = ''; statsDiv.textContent = ''; heroEl.classList.remove('compact'); }
+  sugTimer = setTimeout(() => {
+    buildSuggestions(v);
+    if (v.trim().length >= 2) doSearch();
+  }, 220);
+});
+
+qInput.addEventListener('keypress', e => { if (e.key === 'Enter') doSearch(); });
+qInput.addEventListener('keydown', e => { if (e.key === 'Escape') hideSuggestions(); });
+
+sugBox.addEventListener('click', e => {
+  const btn = e.target.closest('.suggestion');
+  if (!btn) return;
+  qInput.value = btn.dataset.val;
+  hideSuggestions();
+  doSearch();
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.search-wrap')) hideSuggestions();
+});
+
+/* ============================================================
+   6. ТЕМА
+   ============================================================ */
+const themeBtn = document.getElementById('themeToggle');
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  themeBtn.textContent = t === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('yandex2-theme', t);
+}
+themeBtn.addEventListener('click', () => {
+  const cur = document.documentElement.getAttribute('data-theme');
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+});
+applyTheme(localStorage.getItem('yandex2-theme') || 'light');
+
+/* ============================================================
+   7. СИМУЛЯТОР КРАУЛЕРА
+   ============================================================ */
+const crawlPanel = document.getElementById('crawlPanel');
+const crawlToggle = document.getElementById('crawlToggle');
+crawlToggle.addEventListener('click', () => {
+  crawlPanel.classList.toggle('show');
+  if (crawlPanel.classList.contains('show')) document.getElementById('crawlUrl').focus();
+});
+
+const crawlLog = document.getElementById('crawlLog');
+function log(msg, cls = '') {
+  const line = document.createElement('div');
+  if (cls) line.className = cls;
+  line.innerHTML = msg;
+  crawlLog.appendChild(line);
+  crawlLog.scrollTop = crawlLog.scrollHeight;
+}
+
+async function runCrawler() {
+  const input = document.getElementById('crawlUrl').value.trim();
+  if (!input) return;
+
+  crawlLog.innerHTML = '';
+  log(`<span class="info">🕷 Запуск краулера Yandex2…</span>`);
+  await sleep(300);
+
+  // Симуляция обхода: генерируем "страницы" по ключевому слову
+  const sources = ['ru.wikipedia.org', 'habr.com', 'medium.com', 'dev.to', 'github.com'];
+  const count = 3 + Math.floor(Math.random() * 3);
+
+  for (let i = 0; i < count; i++) {
+    await sleep(400 + Math.random() * 400);
+    const src = sources[Math.floor(Math.random() * sources.length)];
+    const slug = input.toLowerCase().replace(/\s+/g, '-');
+    const url = `https://${src}/wiki/${slug}-${i + 1}`;
+    log(`<span class="info">→ GET</span> ${url}`);
+
+    await sleep(250 + Math.random() * 300);
+    // Проверяем, нет ли уже такой статьи
+    const exists = DOCUMENTS.find(d => d.title.toLowerCase().includes(input.toLowerCase()));
+
+    if (exists) {
+      log(`<span class="err">✗ уже в индексе, пропуск</span>`);
+      continue;
+    }
+
+    const newDoc = {
+      url,
+      title: `${input} — обзор ${src.split('.')[0]} #${i + 1}`,
+      category: "Краулер",
+      content: `Автоматически собранная краулером Yandex2 страница по запросу «${input}». Источник: ${src}. Содержит информацию о ${input}, связанные материалы и ссылки. Проиндексировано автоматически.`
+    };
+    DOCUMENTS.push(newDoc);
+    log(`<span class="ok">✓ проиндексировано: ${newDoc.title}</span>`);
+  }
+
+  await sleep(300);
+  buildIndex();
+  log(`<span class="ok">✅ Готово. Документов в индексе: ${DOCUMENTS.length}</span>`);
+  log(`<span class="info">💡 Попробуйте поискать «${input}»</span>`);
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/* ============================================================
+   8. СТАРТ
+   ============================================================ */
+buildIndex();
+qInput.focus();
+</script>
+</body>
+</html>
