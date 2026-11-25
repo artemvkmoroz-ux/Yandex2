@@ -669,6 +669,99 @@ applyTheme(localStorage.getItem('yandex2-theme') || (matchMedia('(prefers-color-
    ============================================================ */
 renderHistory();
 qInput.focus();
+/* ============================================================
+   PWA: SERVICE WORKER + УСТАНОВКА
+   ============================================================ */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('✅ SW зарегистрирован:', reg.scope))
+      .catch(err => console.warn('⚠️ SW не зарегистрирован:', err));
+  });
+}
+
+// Перехват "Установить приложение"
+let deferredPrompt = null;
+const installBanner = document.getElementById('installBanner');
+const installBtn = document.getElementById('installBtn');
+const installClose = document.getElementById('installClose');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Показываем баннер через 3 секунды после загрузки
+  setTimeout(() => installBanner.classList.add('show'), 3000);
+});
+
+installBtn?.addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  console.log('Выбор пользователя:', outcome);
+  deferredPrompt = null;
+  installBanner.classList.remove('show');
+});
+
+installClose?.addEventListener('click', () => {
+  installBanner.classList.remove('show');
+  localStorage.setItem('yandex2-install-dismissed', '1');
+});
+
+// Не показываем баннер повторно, если отклонили
+if (localStorage.getItem('yandex2-install-dismissed')) {
+  installBanner?.remove();
+}
+
+// Приложение установлено
+window.addEventListener('appinstalled', () => {
+  showToast('🎉 Yandex2 установлена!');
+  installBanner?.classList.remove('show');
+});
+
+/* ============================================================
+   PWA: ОФЛАЙН-ИНДИКАТОР
+   ============================================================ */
+const offlineBadge = document.getElementById('offlineBadge');
+
+function updateOnline() {
+  if (navigator.onLine) {
+    offlineBadge.classList.remove('show');
+  } else {
+    offlineBadge.classList.add('show');
+  }
+}
+window.addEventListener('online', () => {
+  updateOnline();
+  showToast('✅ Соединение восстановлено');
+});
+window.addEventListener('offline', () => {
+  updateOnline();
+  showToast('📡 Вы офлайн. Работает кэш');
+});
+updateOnline();
+
+/* ============================================================
+   PWA: TOAST
+   ============================================================ */
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  requestAnimationFrame(() => t.classList.add('show'));
+  setTimeout(() => {
+    t.classList.remove('show');
+    setTimeout(() => t.remove(), 400);
+  }, 2600);
+}
+
+/* ============================================================
+   PWA: ОБРАБОТКА ?q= ИЗ SHORTCUTS
+   ============================================================ */
+const urlQ = new URLSearchParams(location.search).get('q');
+if (urlQ) {
+  setTimeout(() => quickSearch(urlQ), 500);
+}
 </script>
 </body>
 </html>
