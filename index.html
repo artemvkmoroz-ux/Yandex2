@@ -3,432 +3,435 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Yandex2 — Найди больше</title>
+<title>GROOTTREE — Ищи глубже</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-/* ================= ПЕРЕМЕННЫЕ ================= */
-:root{
-  --bg:#f4f6fb; --bg-2:#ffffff; --bg-3:#eef1f8;
-  --glass:rgba(255,255,255,.55); --glass-2:rgba(255,255,255,.35);
-  --text:#0d1017; --text-2:#525a6b; --text-3:#8b93a5;
-  --border:rgba(13,16,23,.08); --border-2:rgba(13,16,23,.14);
-  --accent:#ff2d55; --accent-2:#ff6b3d; --accent-3:#a855f7;
-  --glow:rgba(255,45,85,.35);
-  --link:#2b5cff; --green:#00b87c;
-  --mark:#ffe066;
-  --shadow:0 24px 60px -12px rgba(13,16,23,.18);
-  --shadow-lg:0 40px 120px -20px rgba(13,16,23,.35);
-  --r:24px;
+/* ============ ПЕРЕМЕННЫЕ ============ */
+:root {
+  --bg: #f4f7f5;
+  --bg-card: #ffffff;
+  --bg-glass: rgba(255,255,255,0.7);
+  --text: #0d1f17;
+  --text-2: #4a6157;
+  --text-3: #8ca196;
+  --border: rgba(13,31,23,0.08);
+  --border-2: rgba(13,31,23,0.15);
+  --accent: #00a86b; /* Изумрудный / Дерево */
+  --accent-2: #007a4d;
+  --accent-3: #f59e0b; /* Золотой */
+  --glow: rgba(0,168,107,0.3);
+  --link: #007a4d;
+  --mark: #fef08a;
+  --shadow: 0 16px 48px -8px rgba(13,31,23,0.12);
+  --shadow-lg: 0 32px 80px -16px rgba(13,31,23,0.2);
+  --r: 20px;
 }
-[data-theme="dark"]{
-  --bg:#070810; --bg-2:#0e1018; --bg-3:#141720;
-  --glass:rgba(20,23,32,.55); --glass-2:rgba(20,23,32,.30);
-  --text:#f2f4fa; --text-2:#a7aec0; --text-3:#656d80;
-  --border:rgba(255,255,255,.08); --border-2:rgba(255,255,255,.14);
-  --accent:#ff3b64; --accent-2:#ff7a4d; --accent-3:#b06bff;
-  --glow:rgba(255,59,100,.45);
-  --link:#8ab4ff; --green:#4ade80;
-  --mark:#ffe066;
-  --shadow:0 24px 60px -12px rgba(0,0,0,.65);
-  --shadow-lg:0 40px 120px -20px rgba(0,0,0,.85);
+[data-theme="dark"] {
+  --bg: #08110c;
+  --bg-card: #0f1a14;
+  --bg-glass: rgba(15,26,20,0.65);
+  --text: #e6f0ea;
+  --text-2: #9db8a9;
+  --text-3: #5f7d6c;
+  --border: rgba(230,240,234,0.08);
+  --border-2: rgba(230,240,234,0.15);
+  --accent: #00d68f;
+  --accent-2: #00a86b;
+  --accent-3: #fbbf24;
+  --glow: rgba(0,214,143,0.25);
+  --link: #4ade80;
+  --mark: #fbbf24;
+  --shadow: 0 16px 48px -8px rgba(0,0,0,0.6);
+  --shadow-lg: 0 32px 80px -16px rgba(0,0,0,0.8);
 }
 
-/* ================= БАЗА ================= */
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  font-family:'Inter',system-ui,-apple-system,sans-serif;
-  background:var(--bg); color:var(--text);
-  min-height:100vh; overflow-x:hidden;
-  transition:background .5s cubic-bezier(.4,0,.2,1), color .5s;
-  -webkit-font-smoothing:antialiased;
+/* ============ БАЗА ============ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; overflow-x: hidden;
+  transition: background .4s, color .4s;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ================= ФОН: ЖИВЫЕ ПЯТНА ================= */
-.aurora{
-  position:fixed; inset:-20%; z-index:-2; pointer-events:none;
-  filter:blur(80px); opacity:.9;
+/* ============ ФОН ============ */
+.aurora {
+  position: fixed; inset: -20%; z-index: -2; pointer-events: none;
+  filter: blur(90px); opacity: .85;
   background:
     radial-gradient(40% 40% at 15% 20%, var(--glow), transparent 70%),
-    radial-gradient(35% 45% at 85% 15%, rgba(168,85,247,.30), transparent 70%),
-    radial-gradient(45% 40% at 50% 90%, rgba(43,92,255,.25), transparent 70%),
-    radial-gradient(30% 30% at 75% 65%, rgba(255,107,61,.22), transparent 70%);
-  animation:auroraMove 24s ease-in-out infinite alternate;
+    radial-gradient(35% 45% at 85% 15%, rgba(0,214,143,.15), transparent 70%),
+    radial-gradient(45% 40% at 50% 90%, rgba(251,191,36,.1), transparent 70%);
+  animation: auroraMove 22s ease-in-out infinite alternate;
 }
-@keyframes auroraMove{
-  0%{transform:translate(0,0) scale(1) rotate(0)}
-  50%{transform:translate(3%,-2%) scale(1.08) rotate(2deg)}
-  100%{transform:translate(-3%,3%) scale(1.05) rotate(-2deg)}
+@keyframes auroraMove {
+  0% { transform: translate(0,0) scale(1); }
+  100% { transform: translate(-4%,3%) scale(1.08); }
 }
 
-/* сетка поверх фона */
-.grid-bg{
-  position:fixed; inset:0; z-index:-1; pointer-events:none;
-  background-image:
-    linear-gradient(var(--border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size:64px 64px;
-  mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 80%);
-  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 80%);
-  opacity:.5;
+/* ============ КОНТЕЙНЕР ============ */
+.app {
+  position: relative; z-index: 1;
+  max-width: 1040px; margin: 0 auto; padding: 24px 24px 0;
+  display: flex; flex-direction: column; min-height: 100vh;
 }
 
-/* ================= КОНТЕЙНЕР ================= */
-.app{
-  position:relative; z-index:1;
-  max-width:1000px; margin:0 auto; padding:24px 24px 0;
-  display:flex; flex-direction:column; min-height:100vh;
+/* ============ TOPBAR ============ */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 4px; margin-bottom: 36px;
 }
+.brand { display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
+.logo-svg { width: 46px; height: 46px; filter: drop-shadow(0 8px 24px var(--glow)); transition: transform .4s; }
+.brand:hover .logo-svg { transform: scale(1.08); }
+.logo-text {
+  font-size: 24px; font-weight: 900; letter-spacing: -1px;
+  background: linear-gradient(120deg, var(--text) 20%, var(--accent) 80%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.top-actions { display: flex; gap: 10px; align-items: center; }
+.icon-btn {
+  width: 42px; height: 42px; border-radius: 12px;
+  border: 1px solid var(--border-2); background: var(--bg-glass);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  color: var(--text); cursor: pointer; display: grid; place-items: center;
+  font-size: 18px; transition: .2s; box-shadow: var(--shadow);
+}
+.icon-btn:hover { transform: translateY(-2px); border-color: var(--accent); }
 
-/* ================= TOPBAR ================= */
-.topbar{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:8px 4px; margin-bottom:40px;
+/* ============ HERO ============ */
+.hero {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; transition: all .5s; margin-top: 6vh;
 }
-.brand{display:flex;align-items:center;gap:14px;cursor:pointer;user-select:none}
-.logo-svg{width:46px;height:46px;filter:drop-shadow(0 8px 24px var(--glow));transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
-.brand:hover .logo-svg{transform:rotate(-8deg) scale(1.08)}
-.logo-text{
-  font-size:28px;font-weight:900;letter-spacing:-1.2px;
-  background:linear-gradient(120deg,var(--text) 20%,var(--accent) 60%,var(--accent-3) 100%);
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+.hero.compact { margin-top: 0; margin-bottom: 8px; }
+.hero-title {
+  font-size: clamp(36px, 6vw, 58px); font-weight: 900; letter-spacing: -2px;
+  line-height: 1.05; margin-bottom: 12px;
+  background: linear-gradient(140deg, var(--text) 30%, var(--accent) 70%, var(--accent-3) 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  animation: titleIn .7s backwards;
 }
-.logo-text sup{font-size:15px;font-weight:800;color:var(--accent);-webkit-text-fill-color:var(--accent)}
-.top-actions{display:flex;gap:10px;align-items:center}
-.icon-btn{
-  width:44px;height:44px;border-radius:14px;
-  border:1px solid var(--border-2);background:var(--glass);
-  backdrop-filter:blur(20px) saturate(1.6);-webkit-backdrop-filter:blur(20px) saturate(1.6);
-  color:var(--text);cursor:pointer;display:grid;place-items:center;
-  font-size:19px;transition:.25s cubic-bezier(.4,0,.2,1);
-  box-shadow:var(--shadow);
-}
-.icon-btn:hover{transform:translateY(-2px) scale(1.05);border-color:var(--accent);box-shadow:0 8px 30px var(--glow)}
-.icon-btn:active{transform:scale(.96)}
+.hero-title .accent { -webkit-text-fill-color: var(--accent); }
+@keyframes titleIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.tagline { color: var(--text-2); font-size: 16px; margin-bottom: 32px; animation: titleIn .7s .1s backwards; }
 
-/* ================= HERO ================= */
-.hero{
-  display:flex;flex-direction:column;align-items:center;
-  text-align:center;transition:all .6s cubic-bezier(.4,0,.2,1);
-  margin-top:6vh;
+/* ============ ПОИСК ============ */
+.search-wrap { position: relative; width: 100%; max-width: 660px; animation: titleIn .7s .2s backwards; }
+.search-box {
+  display: flex; align-items: center; gap: 4px;
+  padding: 6px 6px 6px 20px;
+  background: var(--bg-glass);
+  backdrop-filter: blur(30px) saturate(1.8); -webkit-backdrop-filter: blur(30px) saturate(1.8);
+  border: 1.5px solid var(--border-2);
+  border-radius: 999px;
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.1);
+  transition: .3s;
 }
-.hero.compact{margin-top:0;margin-bottom:8px}
-.hero-title{
-  font-size:clamp(38px,7vw,68px);font-weight:900;letter-spacing:-2.5px;
-  line-height:1.05;margin-bottom:14px;
-  background:linear-gradient(140deg,var(--text) 30%,var(--accent) 75%,var(--accent-3) 100%);
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-  animation:titleIn .8s cubic-bezier(.4,0,.2,1) backwards;
+.search-box:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px var(--glow), var(--shadow-lg); transform: translateY(-1px); }
+.search-icon { font-size: 18px; color: var(--text-3); flex-shrink: 0; }
+.search-box input {
+  flex: 1; padding: 14px 10px; border: none; background: transparent;
+  font-size: 16px; font-weight: 500; color: var(--text); outline: none; min-width: 0; font-family: inherit;
 }
-@keyframes titleIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
-.hero-title .accent{-webkit-text-fill-color:var(--accent)}
-.tagline{
-  color:var(--text-2);font-size:16px;margin-bottom:36px;
-  animation:titleIn .8s .1s cubic-bezier(.4,0,.2,1) backwards;
+.search-box input::placeholder { color: var(--text-3); font-weight: 400; }
+.search-btn {
+  padding: 12px 26px; border: none; border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff; font-size: 15px; font-weight: 700; cursor: pointer;
+  font-family: inherit; white-space: nowrap; box-shadow: 0 8px 24px var(--glow);
+  transition: .2s;
 }
+.search-btn:hover { transform: translateY(-1px) scale(1.02); filter: brightness(1.1); }
 
-/* ================= ПОИСК ================= */
-.search-wrap{position:relative;width:100%;max-width:680px;animation:titleIn .8s .2s cubic-bezier(.4,0,.2,1) backwards}
-.search-box{
-  display:flex;align-items:center;gap:4px;
-  padding:7px 7px 7px 24px;
-  background:var(--glass);
-  backdrop-filter:blur(30px) saturate(1.8);-webkit-backdrop-filter:blur(30px) saturate(1.8);
-  border:1.5px solid var(--border-2);
-  border-radius:999px;
-  box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.15);
-  transition:.3s cubic-bezier(.4,0,.2,1);
+/* ============ СТАТИСТИКА ============ */
+.stats {
+  margin-top: 22px; color: var(--text-3); font-size: 13px;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center;
 }
-.search-box:focus-within{
-  border-color:var(--accent);
-  box-shadow:0 0 0 5px var(--glow),var(--shadow-lg);
-  transform:translateY(-2px);
+.stats .pill {
+  padding: 5px 12px; border-radius: 999px; background: var(--bg-glass);
+  border: 1px solid var(--border); font-size: 12.5px; font-weight: 500;
 }
-.search-icon{font-size:20px;color:var(--text-3);flex-shrink:0;transition:.3s}
-.search-box:focus-within .search-icon{color:var(--accent);transform:scale(1.1)}
-.search-box input{
-  flex:1;padding:15px 10px;border:none;background:transparent;
-  font-size:17px;font-weight:500;color:var(--text);outline:none;min-width:0;
-  font-family:inherit;
-}
-.search-box input::placeholder{color:var(--text-3);font-weight:400}
-.search-btn{
-  padding:13px 30px;border:none;border-radius:999px;
-  background:linear-gradient(135deg,var(--accent),var(--accent-2));
-  color:#fff;font-size:15px;font-weight:700;cursor:pointer;
-  font-family:inherit;white-space:nowrap;position:relative;overflow:hidden;
-  box-shadow:0 8px 24px var(--glow);
-  transition:.25s cubic-bezier(.4,0,.2,1);
-}
-.search-btn::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,var(--accent-3),var(--accent));
-  opacity:0;transition:opacity .3s;
-}
-.search-btn span{position:relative;z-index:1}
-.search-btn:hover{transform:translateY(-1px) scale(1.03);box-shadow:0 12px 32px var(--glow)}
-.search-btn:hover::before{opacity:1}
-.search-btn:active{transform:scale(.97)}
+.stats .pill b { color: var(--accent); font-weight: 800; }
 
-/* ================= АВТОДОПОЛНЕНИЕ ================= */
-.suggestions{
-  position:absolute;top:calc(100% + 12px);left:0;right:0;
-  background:var(--glass);
-  backdrop-filter:blur(30px) saturate(1.8);-webkit-backdrop-filter:blur(30px) saturate(1.8);
-  border:1px solid var(--border-2);border-radius:20px;
-  box-shadow:var(--shadow-lg);overflow:hidden;
-  opacity:0;transform:translateY(-8px) scale(.98);pointer-events:none;
-  transition:.25s cubic-bezier(.4,0,.2,1);z-index:100;
+/* ============ РЕЗУЛЬТАТЫ ============ */
+.results {
+  width: 100%; max-width: 780px; margin: 24px auto 0;
+  display: flex; flex-direction: column; gap: 12px; padding-bottom: 40px;
 }
-.suggestions.show{opacity:1;transform:none;pointer-events:auto}
-.suggestion{
-  display:flex;align-items:center;gap:14px;width:100%;
-  padding:14px 22px;border:none;background:transparent;
-  color:var(--text);font-size:15px;font-family:inherit;text-align:left;
-  cursor:pointer;transition:background .15s;
+.result {
+  padding: 20px 24px; border-radius: var(--r);
+  background: var(--bg-glass);
+  backdrop-filter: blur(24px) saturate(1.6); -webkit-backdrop-filter: blur(24px) saturate(1.6);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: .3s; animation: cardIn .45s backwards; position: relative; overflow: hidden;
 }
-.suggestion:hover,.suggestion.active{background:var(--glass-2)}
-.suggestion .sicon{color:var(--text-3);font-size:15px}
-.suggestion b{color:var(--accent);font-weight:800}
+.result::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-3));
+  transform: scaleX(0); transform-origin: left; transition: transform .4s;
+}
+.result:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+.result:hover::before { transform: scaleX(1); }
+@keyframes cardIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.result a {
+  color: var(--link); text-decoration: none;
+  font-size: 18px; font-weight: 700; line-height: 1.35; letter-spacing: -.2px; transition: .2s;
+}
+.result a:hover { color: var(--accent); }
+.result .meta { display: flex; align-items: center; gap: 10px; margin: 8px 0 10px; flex-wrap: wrap; }
+.result .url {
+  color: var(--accent-2); font-size: 12px; font-weight: 500;
+  padding: 3px 10px; border-radius: 8px;
+  background: rgba(0,168,107,.1); border: 1px solid rgba(0,168,107,.2);
+}
+.result .badge {
+  font-size: 11px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 8px;
+  background: rgba(255,255,255,.06); border: 1px solid var(--border); color: var(--text-2);
+}
+.result .snippet { color: var(--text-2); font-size: 14px; line-height: 1.6; }
+mark { background: linear-gradient(120deg, var(--mark), #ffd84d); color: #3a2c00; padding: 1px 4px; border-radius: 4px; font-weight: 700; }
 
-/* ================= ЧИПЫ (быстрые запросы) ================= */
-.chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:24px;animation:titleIn .8s .3s cubic-bezier(.4,0,.2,1) backwards}
-.chip{
-  padding:9px 18px;border-radius:999px;
-  background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border:1px solid var(--border-2);color:var(--text-2);
-  font-size:13.5px;font-weight:500;cursor:pointer;font-family:inherit;
-  transition:.25s cubic-bezier(.4,0,.2,1);
+/* ============ МОДАЛЬНОЕ ОКНО НАСТРОЕК ============ */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none; transition: .3s;
 }
-.chip:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px);box-shadow:0 6px 20px var(--glow)}
+.modal-overlay.show { opacity: 1; pointer-events: auto; }
+.modal {
+  width: 100%; max-width: 480px;
+  background: var(--bg-card); border: 1px solid var(--border-2);
+  border-radius: 24px; padding: 24px;
+  box-shadow: var(--shadow-lg); transform: translateY(20px) scale(.96);
+  transition: .3s cubic-bezier(.34,1.4,.64,1);
+  max-height: 90vh; overflow-y: auto;
+}
+.modal-overlay.show .modal { transform: none; }
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.modal-title { font-size: 20px; font-weight: 800; }
+.close-btn { background: transparent; border: none; font-size: 20px; color: var(--text-3); cursor: pointer; }
+.close-btn:hover { color: var(--accent); }
 
-/* ================= СТАТИСТИКА ================= */
-.stats{
-  margin-top:24px;color:var(--text-3);font-size:13.5px;font-weight:500;
-  display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;
+.setting-group { margin-bottom: 24px; }
+.setting-group h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-3); margin-bottom: 12px; }
+.setting-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
 }
-.stats .pill{
-  padding:5px 12px;border-radius:999px;background:var(--glass);
-  border:1px solid var(--border);font-size:12.5px;
-}
-.stats .pill b{color:var(--accent);font-weight:800}
+.setting-item:last-child { border-bottom: none; }
+.setting-text { display: flex; flex-direction: column; gap: 4px; }
+.setting-text b { font-size: 14px; font-weight: 600; }
+.setting-text span { font-size: 12px; color: var(--text-2); }
 
-/* ================= РЕЗУЛЬТАТЫ ================= */
-.results{
-  width:100%;max-width:780px;margin:28px auto 0;
-  display:flex;flex-direction:column;gap:14px;
-  padding-bottom:40px;
+/* Переключатель (Toggle) */
+.toggle {
+  width: 44px; height: 24px; border-radius: 999px; background: var(--border-2);
+  position: relative; cursor: pointer; transition: .3s; border: none; outline: none;
 }
-.result{
-  padding:22px 26px;border-radius:var(--r);
-  background:var(--glass);
-  backdrop-filter:blur(24px) saturate(1.6);-webkit-backdrop-filter:blur(24px) saturate(1.6);
-  border:1px solid var(--border);
-  box-shadow:var(--shadow);
-  transition:.3s cubic-bezier(.4,0,.2,1);
-  animation:cardIn .5s cubic-bezier(.34,1.4,.64,1) backwards;
-  position:relative;overflow:hidden;
+.toggle::after {
+  content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px;
+  background: #fff; border-radius: 50%; transition: .3s;
 }
-.result::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--accent),var(--accent-2),var(--accent-3));
-  transform:scaleX(0);transform-origin:left;transition:transform .4s;
-}
-.result:hover{
-  transform:translateY(-4px);
-  border-color:var(--border-2);
-  box-shadow:var(--shadow-lg);
-}
-.result:hover::before{transform:scaleX(1)}
-@keyframes cardIn{
-  from{opacity:0;transform:translateY(16px) scale(.98)}
-  to{opacity:1;transform:none}
-}
-.result a{
-  color:var(--link);text-decoration:none;
-  font-size:19px;font-weight:700;line-height:1.35;letter-spacing:-.3px;
-  transition:.2s;
-}
-.result a:hover{color:var(--accent)}
-.result .meta{display:flex;align-items:center;gap:10px;margin:8px 0 10px;flex-wrap:wrap}
-.result .url{
-  color:var(--green);font-size:12.5px;font-weight:500;
-  padding:3px 10px;border-radius:8px;
-  background:rgba(0,184,124,.1);border:1px solid rgba(0,184,124,.2);
-}
-.result .badge{
-  font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
-  padding:3px 10px;border-radius:8px;
-  background:var(--glass-2);border:1px solid var(--border);color:var(--text-2);
-}
-.result .badge.wiki{background:rgba(43,92,255,.12);border-color:rgba(43,92,255,.25);color:var(--link)}
-.result .badge.ddg{background:rgba(255,107,61,.12);border-color:rgba(255,107,61,.25);color:var(--accent-2)}
-.result .snippet{color:var(--text-2);font-size:14.5px;line-height:1.65}
-mark{
-  background:linear-gradient(120deg,var(--mark),#ffd84d);
-  color:#3a2c00;padding:1px 4px;border-radius:5px;font-weight:700;
-}
+.toggle.active { background: var(--accent); }
+.toggle.active::after { transform: translateX(20px); }
 
-/* ================= СКЕЛЕТОН ================= */
-.skeleton{
-  padding:22px 26px;border-radius:var(--r);
-  background:var(--glass);border:1px solid var(--border);
-  box-shadow:var(--shadow);overflow:hidden;position:relative;
+.btn-danger {
+  width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,59,100,.2);
+  background: rgba(255,59,100,.1); color: #ff2d55; font-weight: 700; font-size: 14px;
+  cursor: pointer; transition: .2s; margin-top: 12px; font-family: inherit;
 }
-.skeleton::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);
-  animation:shimmer 1.4s infinite;
-}
-@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-.sk-line{height:14px;border-radius:7px;background:var(--bg-3);margin-bottom:10px}
-.sk-line.title{height:20px;width:60%;background:linear-gradient(90deg,var(--bg-3),var(--border-2))}
-.sk-line.desc{width:90%}
-.sk-line.desc2{width:75%}
-.sk-line.meta{width:30%;height:10px}
+.btn-danger:hover { background: rgba(255,59,100,.2); }
 
-/* ================= ПУСТО ================= */
-.empty{
-  text-align:center;padding:60px 24px;border-radius:var(--r);
-  background:var(--glass);border:1px dashed var(--border-2);
-  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  animation:cardIn .5s backwards;
-}
-.empty .big{font-size:56px;display:block;margin-bottom:16px;animation:float 3s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-.empty h3{font-size:20px;font-weight:800;margin-bottom:8px}
-.empty p{color:var(--text-2);font-size:14.5px}
-
-/* ================= ФУТЕР ================= */
-.footer{
-  margin-top:auto;padding:40px 0 28px;text-align:center;
-  color:var(--text-3);font-size:13px;
-}
-.footer b{
-  background:linear-gradient(120deg,var(--accent),var(--accent-3));
-  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-  font-weight:900;
-}
-.dot{color:var(--border-2);margin:0 10px}
-
-/* ================= ИСТОРИЯ ================= */
-.history{
-  width:100%;max-width:680px;margin:20px auto 0;
-  display:none;
-}
-.history.show{display:block;animation:cardIn .4s backwards}
-.history-title{font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-3);margin-bottom:10px}
-.history-list{display:flex;flex-wrap:wrap;gap:8px}
-.history-item{
-  padding:7px 14px;border-radius:999px;font-size:13px;
-  background:var(--glass);border:1px solid var(--border);
-  color:var(--text-2);cursor:pointer;font-family:inherit;
-  transition:.2s;display:flex;align-items:center;gap:6px;
-}
-.history-item:hover{border-color:var(--accent);color:var(--accent)}
-.history-item .x{opacity:.5;font-size:11px}
-
-/* ================= СКРОЛЛБАР ================= */
-::-webkit-scrollbar{width:10px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:10px;border:2px solid var(--bg)}
-::-webkit-scrollbar-thumb:hover{background:var(--text-3)}
-
-/* ================= АДАПТИВ ================= */
-@media(max-width:700px){
-  .app{padding:16px 16px 0}
-  .topbar{margin-bottom:24px}
-  .logo-text{font-size:22px}
-  .logo-svg{width:38px;height:38px}
-  .hero-title{letter-spacing:-1.5px}
-  .search-box{padding:6px 6px 6px 18px}
-  .search-btn{padding:12px 20px;font-size:14px}
-  .search-box input{font-size:15px;padding:13px 8px}
-  .result{padding:18px 20px}
-  .result a{font-size:16.5px}
-  .chips{gap:8px}
-  .chip{font-size:12.5px;padding:8px 14px}
-}
+/* История в настройках */
+.history-list { max-height: 150px; overflow-y: auto; border: 1px solid var(--border-2); border-radius: 12px; padding: 8px; }
+.history-item-modal { padding: 8px 12px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; font-size: 13px; }
+.history-item-modal:last-child { border-bottom: none; }
 </style>
 </head>
 <body>
 <div class="aurora"></div>
-<div class="grid-bg"></div>
 
 <div class="app">
   <!-- TOPBAR -->
   <div class="topbar">
     <div class="brand" onclick="resetSearch()">
+      <!-- Дерево/Росток SVG -->
       <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#ff2d55"/>
-            <stop offset="50%" stop-color="#ff6b3d"/>
-            <stop offset="100%" stop-color="#a855f7"/>
-          </linearGradient>
-          <linearGradient id="lg2" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#fff"/>
-            <stop offset="100%" stop-color="#fff" stop-opacity=".75"/>
+          <linearGradient id="treeGrad" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0%" stop-color="#00a86b"/>
+            <stop offset="100%" stop-color="#f59e0b"/>
           </linearGradient>
         </defs>
-        <rect x="4" y="4" width="92" height="92" rx="28" fill="url(#lg1)"/>
-        <path d="M30 30 L50 56 L70 30" fill="none" stroke="url(#lg2)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
-        <line x1="50" y1="56" x2="50" y2="74" stroke="url(#lg2)" stroke-width="9" stroke-linecap="round"/>
-        <circle cx="73" cy="27" r="6.5" fill="#fff"/>
+        <!-- Ствол -->
+        <path d="M50 90 Q50 60 30 40 M50 90 Q50 50 70 30" fill="none" stroke="url(#treeGrad)" stroke-width="8" stroke-linecap="round"/>
+        <!-- Листья -->
+        <circle cx="30" cy="40" r="12" fill="url(#treeGrad)"/>
+        <circle cx="70" cy="30" r="10" fill="url(#treeGrad)"/>
+        <circle cx="50" cy="20" r="14" fill="url(#treeGrad)"/>
       </svg>
-      <div class="logo-text">Yandex<sup>2</sup></div>
+      <div class="logo-text">GROOTTREE</div>
     </div>
     <div class="top-actions">
-      <button class="icon-btn" id="themeToggle" title="Сменить тему">🌙</button>
+      <button class="icon-btn" id="settingsBtn" title="Настройки">⚙️</button>
+      <button class="icon-btn" id="themeToggle" title="Тема">🌙</button>
     </div>
   </div>
 
   <!-- HERO -->
   <div class="hero" id="hero">
-    <h1 class="hero-title">Найди <span class="accent">больше.</span><br>Найди точнее.</h1>
-    <div class="tagline">Поиск по Википедии и DuckDuckGo в реальном времени</div>
+    <h1 class="hero-title">Расти <span class="accent">знаниями.</span><br>Ищи глубже.</h1>
+    <div class="tagline">Умный поиск по открытому интернету</div>
 
     <div class="search-wrap">
       <div class="search-box">
         <span class="search-icon">🔍</span>
-        <input type="text" id="q" placeholder="Что ищем в интернете?" autofocus autocomplete="off">
-        <button class="search-btn" onclick="realSearch()"><span>Найти</span></button>
+        <input type="text" id="q" placeholder="Что хотите найти?" autofocus autocomplete="off">
+        <button class="search-btn" onclick="realSearch()">Найти</button>
       </div>
-      <div class="suggestions" id="suggestions"></div>
-    </div>
-
-    <div class="chips" id="chips">
-      <button class="chip" onclick="quickSearch('Python')">🐍 Python</button>
-      <button class="chip" onclick="quickSearch('машинное обучение')">🤖 ML</button>
-      <button class="chip" onclick="quickSearch('Москва')">🏛 Москва</button>
-      <button class="chip" onclick="quickSearch('кофе')">☕ Кофе</button>
-      <button class="chip" onclick="quickSearch('GitHub')">💻 GitHub</button>
     </div>
 
     <div class="stats" id="stats"></div>
-  </div>
-
-  <!-- ИСТОРИЯ -->
-  <div class="history" id="history">
-    <div class="history-title">Недавние запросы</div>
-    <div class="history-list" id="historyList"></div>
   </div>
 
   <!-- РЕЗУЛЬТАТЫ -->
   <div class="results" id="results"></div>
 </div>
 
-<div class="footer">
-  <b>Yandex2</b> © 2026 <span class="dot">·</span> Найди больше. Найди точнее.
+<!-- МОДАЛЬНОЕ ОКНО НАСТРОЕК -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Настройки GROOTTREE</div>
+      <button class="close-btn" onclick="toggleSettings(false)">✕</button>
+    </div>
+
+    <div class="setting-group">
+      <h4>Источники поиска</h4>
+      <div class="setting-item">
+        <div class="setting-text">
+          <b>Wikipedia</b>
+          <span>Поиск по статьям</span>
+        </div>
+        <button class="toggle active" id="toggleWiki" onclick="toggleSource('wiki', this)"></button>
+      </div>
+      <div class="setting-item">
+        <div class="setting-text">
+          <b>DuckDuckGo</b>
+          <span>Результаты по всему интернету</span>
+        </div>
+        <button class="toggle active" id="toggleDdg" onclick="toggleSource('ddg', this)"></button>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <h4>Приватность</h4>
+      <div class="setting-item">
+        <div class="setting-text">
+          <b>История поиска</b>
+          <span id="historyCount">0 запросов сохранено</span>
+        </div>
+        <button class="toggle active" id="toggleHistory" onclick="toggleHistorySetting(this)"></button>
+      </div>
+      
+      <div class="history-list" id="historyListModal" style="margin-top:10px;">
+        <!-- Сюда рендерится история -->
+      </div>
+      
+      <button class="btn-danger" onclick="clearHistory()">Очистить историю поиска</button>
+    </div>
+  </div>
+</div>
+
+<div class="footer" style="margin-top:auto; padding: 36px 0 24px; text-align: center; color: var(--text-3); font-size: 13px;">
+  <b>GROOTTREE</b> © 2026 · Ищи глубже
 </div>
 
 <script>
 /* ============================================================
-   1. ИСТОЧНИКИ ПОИСКА
+   СОСТОЯНИЕ И НАСТРОЙКИ
+   ============================================================ */
+const state = {
+  sources: { wiki: true, ddg: true },
+  saveHistory: true,
+  history: JSON.parse(localStorage.getItem('groot-history') || '[]')
+};
+
+// Восстановление настроек
+const savedSettings = JSON.parse(localStorage.getItem('groot-settings') || '{}');
+if (savedSettings.sources) state.sources = savedSettings.sources;
+if (typeof savedSettings.saveHistory !== 'undefined') state.saveHistory = savedSettings.saveHistory;
+
+/* ============================================================
+   UI ЭЛЕМЕНТЫ
+   ============================================================ */
+const resultsDiv = document.getElementById('results');
+const statsDiv = document.getElementById('stats');
+const heroEl = document.getElementById('hero');
+const modal = document.getElementById('settingsModal');
+
+/* ============================================================
+   НАСТРОЙКИ UI
+   ============================================================ */
+function toggleSettings(show) {
+  modal.classList.toggle('show', show);
+  if (show) renderHistoryModal();
+}
+
+document.getElementById('settingsBtn').onclick = () => toggleSettings(true);
+modal.onclick = (e) => { if (e.target === modal) toggleSettings(false); };
+
+function toggleSource(source, btn) {
+  state.sources[source] = !state.sources[source];
+  btn.classList.toggle('active', state.sources[source]);
+  localStorage.setItem('groot-settings', JSON.stringify(state));
+}
+
+function toggleHistorySetting(btn) {
+  state.saveHistory = !state.saveHistory;
+  btn.classList.toggle('active', state.saveHistory);
+  localStorage.setItem('groot-settings', JSON.stringify(state));
+  if (!state.saveHistory) clearHistory();
+}
+
+function renderHistoryModal() {
+  const list = document.getElementById('historyListModal');
+  document.getElementById('historyCount').textContent = `${state.history.length} запросов сохранено`;
+  if (!state.history.length) {
+    list.innerHTML = '<div style="padding:10px;font-size:12px;text-align:center;color:var(--text-3)">История пуста</div>';
+    return;
+  }
+  list.innerHTML = state.history.slice(0, 10).map(h => `
+    <div class="history-item-modal">
+      <span>${escapeHtml(h)}</span>
+    </div>
+  `).join('');
+}
+
+function clearHistory() {
+  state.history = [];
+  localStorage.removeItem('groot-history');
+  renderHistoryModal();
+}
+
+/* Инициализация переключателей */
+document.getElementById('toggleWiki').classList.toggle('active', state.sources.wiki);
+document.getElementById('toggleDdg').classList.toggle('active', state.sources.ddg);
+document.getElementById('toggleHistory').classList.toggle('active', state.saveHistory);
+
+/* ============================================================
+   ПОИСК
    ============================================================ */
 async function searchWikipedia(query) {
-  const url = `https://ru.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&origin=*&srlimit=6`;
+  const url = `https://ru.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&origin=*&srlimit=5`;
   try {
     const res = await fetch(url);
     const data = await res.json();
@@ -444,15 +447,15 @@ async function searchWikipedia(query) {
 
 function searchDuckDuckGo(query) {
   return new Promise((resolve) => {
-    const cb = 'ddg_' + Date.now() + Math.random().toString(36).slice(2);
-    const timeout = setTimeout(() => { cleanup(); resolve([]); }, 5000);
+    const cbName = 'ddg_' + Date.now() + Math.random().toString(36).slice(2);
+    const timeout = setTimeout(() => { cleanup(); resolve([]); }, 6000);
     function cleanup() {
       clearTimeout(timeout);
-      delete window[cb];
-      const s = document.getElementById(cb);
+      delete window[cbName];
+      const s = document.getElementById(cbName);
       if (s) s.remove();
     }
-    window[cb] = function(data) {
+    window[cbName] = function(data) {
       cleanup();
       const results = [];
       if (data.AbstractText) {
@@ -460,80 +463,80 @@ function searchDuckDuckGo(query) {
           title: data.Heading || query,
           snippet: data.AbstractText,
           url: data.AbstractURL || `https://duckduckgo.com/?q=${encodeURIComponent(query)}`,
-          source: 'DuckDuckGo', sourceClass: 'ddg'
+          source: 'DuckDuckGo',
+          sourceClass: 'ddg'
         });
       }
-      (data.RelatedTopics || []).slice(0, 5).forEach(t => {
-        if (t.Text && t.FirstURL) {
-          results.push({
-            title: t.Text.split(' - ')[0] || t.Text.slice(0, 60),
-            snippet: t.Text.slice(0, 160),
-            url: t.FirstURL,
-            source: 'DuckDuckGo', sourceClass: 'ddg'
-          });
-        }
-      });
+      if (data.RelatedTopics) {
+        data.RelatedTopics.slice(0, 5).forEach(t => {
+          if (t.Text && t.FirstURL) {
+            results.push({
+              title: t.Text.split(' - ')[0] || t.Text.slice(0, 60),
+              snippet: t.Text.slice(0, 150),
+              url: t.FirstURL,
+              source: 'DuckDuckGo',
+              sourceClass: 'ddg'
+            });
+          }
+        });
+      }
+      if (!results.length) {
+        results.push({
+          title: `Искать «${query}» в DuckDuckGo`,
+          snippet: 'Нажмите, чтобы открыть полные результаты поиска.',
+          url: `https://duckduckgo.com/?q=${encodeURIComponent(query)}`,
+          source: 'DuckDuckGo',
+          sourceClass: 'ddg'
+        });
+      }
       resolve(results);
     };
     const script = document.createElement('script');
-    script.id = cb;
-    script.src = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&callback=${cb}`;
+    script.id = cbName;
+    script.src = `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&callback=${cbName}`;
     script.onerror = () => { cleanup(); resolve([]); };
     document.body.appendChild(script);
   });
 }
 
-/* ============================================================
-   2. ГЛАВНЫЙ ПОИСК
-   ============================================================ */
-const resultsDiv = document.getElementById('results');
-const statsDiv = document.getElementById('stats');
-const heroEl = document.getElementById('hero');
-const historyEl = document.getElementById('history');
-const historyList = document.getElementById('historyList');
+async function realSearch() {
+  const q = document.getElementById('q').value.trim();
+  if (!q) return;
+  heroEl.classList.add('compact');
+  statsDiv.innerHTML = '';
+  
+  // Сохранение в историю
+  if (state.saveHistory) {
+    state.history = [q, ...state.history.filter(x => x !== q)].slice(0, 20);
+    localStorage.setItem('groot-history', JSON.stringify(state.history));
+  }
 
-let history = JSON.parse(localStorage.getItem('yandex2-history') || '[]');
-
-function showSkeletons() {
+  // Скелетоны
   resultsDiv.innerHTML = Array(3).fill(0).map(() => `
     <div class="skeleton">
       <div class="sk-line title"></div>
       <div class="sk-line meta"></div>
       <div class="sk-line desc"></div>
-      <div class="sk-line desc2"></div>
     </div>
   `).join('');
-}
-
-async function realSearch() {
-  const q = document.getElementById('q').value.trim();
-  if (!q) return;
-  hideSuggestions();
-  heroEl.classList.add('compact');
-  historyEl.classList.remove('show');
-  statsDiv.innerHTML = '';
-  showSkeletons();
 
   const t0 = performance.now();
-  const [wiki, ddg] = await Promise.all([searchWikipedia(q), searchDuckDuckGo(q)]);
-  const all = [...wiki, ...ddg];
+  const promises = [];
+  if (state.sources.wiki) promises.push(searchWikipedia(q));
+  if (state.sources.ddg) promises.push(searchDuckDuckGo(q));
+  
+  const resultArrays = await Promise.all(promises);
+  const all = resultArrays.flat();
   const t1 = performance.now();
 
   if (!all.length) {
-    resultsDiv.innerHTML = `
-      <div class="empty">
-        <span class="big">🔍</span>
-        <h3>Ничего не найдено</h3>
-        <p>По запросу «${escapeHtml(q)}» пусто. Попробуйте другое слово.</p>
-      </div>`;
+    resultsDiv.innerHTML = `<div class="empty"><span class="big">🌱</span><h3>Ничего не найдено</h3><p>По запросу «${escapeHtml(q)}» пусто.</p></div>`;
     return;
   }
 
   statsDiv.innerHTML = `
     <span class="pill">Найдено <b>${all.length}</b></span>
     <span class="pill">⏱ ${(t1 - t0).toFixed(0)} мс</span>
-    <span class="pill">📚 Wikipedia <b>${wiki.length}</b></span>
-    <span class="pill">🦆 DDG <b>${ddg.length}</b></span>
   `;
 
   resultsDiv.innerHTML = all.map((r, i) => `
@@ -546,15 +549,15 @@ async function realSearch() {
       <div class="snippet">${highlight(r.snippet, q)}</div>
     </div>
   `).join('');
-
-  saveHistory(q);
 }
 
+/* ============================================================
+   ХЕЛПЕРЫ
+   ============================================================ */
 function hostOf(url) {
   try { return new URL(url).hostname.replace('www.', ''); }
   catch { return url.slice(0, 40); }
 }
-
 function highlight(text, q) {
   const words = q.toLowerCase().split(/\s+/).filter(w => w.length > 1);
   let out = escapeHtml(text);
@@ -568,200 +571,30 @@ function escapeHtml(s) { return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&l
 function escapeRegex(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
 /* ============================================================
-   3. ИСТОРИЯ
-   ============================================================ */
-function saveHistory(q) {
-  history = [q, ...history.filter(x => x !== q)].slice(0, 8);
-  localStorage.setItem('yandex2-history', JSON.stringify(history));
-}
-function renderHistory() {
-  if (!history.length) { historyEl.classList.remove('show'); return; }
-  historyList.innerHTML = history.map(h => `
-    <button class="history-item" onclick="quickSearch('${h.replace(/'/g, "\\'")}')">
-      🕘 ${escapeHtml(h)}
-    </button>
-  `).join('');
-  historyEl.classList.add('show');
-}
-
-/* ============================================================
-   4. АВТОДОПОЛНЕНИЕ
-   ============================================================ */
-const sugBox = document.getElementById('suggestions');
-const qInput = document.getElementById('q');
-let sugTimer;
-
-const COMMON = ['python','javascript','машинное обучение','нейронная сеть','django','fastapi','git','github','москва','санкт-петербург','кофе','пицца','борщ','elasticsearch','html','css','typescript','react','vue','node.js'];
-
-function buildSuggestions(q) {
-  q = q.toLowerCase().trim();
-  if (q.length < 1) { hideSuggestions(); return; }
-  const pool = new Set(COMMON.filter(w => w.includes(q)));
-  history.forEach(h => { if (h.toLowerCase().includes(q)) pool.add(h); });
-  const list = [...pool].slice(0, 7);
-  if (!list.length) { hideSuggestions(); return; }
-  sugBox.innerHTML = list.map(s => {
-    const re = new RegExp(`(${escapeRegex(q)})`, 'i');
-    return `<button class="suggestion" data-val="${s.replace(/"/g,'&quot;')}">
-      <span class="sicon">🔎</span><span>${s.replace(re, '<b>$1</b>')}</span>
-    </button>`;
-  }).join('');
-  sugBox.classList.add('show');
-}
-function hideSuggestions() { sugBox.classList.remove('show'); }
-
-qInput.addEventListener('input', e => {
-  clearTimeout(sugTimer);
-  const v = e.target.value;
-  if (!v.trim()) {
-    resultsDiv.innerHTML = ''; statsDiv.innerHTML = '';
-    heroEl.classList.remove('compact');
-    renderHistory();
-  }
-  sugTimer = setTimeout(() => buildSuggestions(v), 180);
-});
-qInput.addEventListener('keypress', e => { if (e.key === 'Enter') realSearch(); });
-qInput.addEventListener('keydown', e => { if (e.key === 'Escape') hideSuggestions(); });
-qInput.addEventListener('focus', () => { if (!qInput.value) renderHistory(); });
-
-sugBox.addEventListener('click', e => {
-  const btn = e.target.closest('.suggestion');
-  if (!btn) return;
-  qInput.value = btn.dataset.val;
-  hideSuggestions();
-  realSearch();
-});
-document.addEventListener('click', e => { if (!e.target.closest('.search-wrap')) hideSuggestions(); });
-
-/* ============================================================
-   5. ХЕЛПЕРЫ UI
-   ============================================================ */
-function quickSearch(q) {
-  qInput.value = q;
-  realSearch();
-}
-function resetSearch() {
-  qInput.value = '';
-  resultsDiv.innerHTML = '';
-  statsDiv.innerHTML = '';
-  heroEl.classList.remove('compact');
-  hideSuggestions();
-  renderHistory();
-  qInput.focus();
-}
-
-/* ============================================================
-   6. ТЕМА
+   ТЕМА И СБРОС
    ============================================================ */
 const themeBtn = document.getElementById('themeToggle');
 function applyTheme(t) {
   document.documentElement.setAttribute('data-theme', t);
   themeBtn.textContent = t === 'dark' ? '☀️' : '🌙';
-  localStorage.setItem('yandex2-theme', t);
+  localStorage.setItem('groot-theme', t);
 }
 themeBtn.addEventListener('click', () => {
   applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
 });
-applyTheme(localStorage.getItem('yandex2-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+applyTheme(localStorage.getItem('groot-theme') || 'light');
 
-/* ============================================================
-   7. СТАРТ
-   ============================================================ */
-renderHistory();
-qInput.focus();
-/* ============================================================
-   PWA: SERVICE WORKER + УСТАНОВКА
-   ============================================================ */
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log('✅ SW зарегистрирован:', reg.scope))
-      .catch(err => console.warn('⚠️ SW не зарегистрирован:', err));
-  });
+function resetSearch() {
+  document.getElementById('q').value = '';
+  resultsDiv.innerHTML = '';
+  statsDiv.innerHTML = '';
+  heroEl.classList.remove('compact');
+  document.getElementById('q').focus();
 }
 
-// Перехват "Установить приложение"
-let deferredPrompt = null;
-const installBanner = document.getElementById('installBanner');
-const installBtn = document.getElementById('installBtn');
-const installClose = document.getElementById('installClose');
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  // Показываем баннер через 3 секунды после загрузки
-  setTimeout(() => installBanner.classList.add('show'), 3000);
+document.getElementById('q').addEventListener('keypress', e => {
+  if (e.key === 'Enter') realSearch();
 });
-
-installBtn?.addEventListener('click', async () => {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  const { outcome } = await deferredPrompt.userChoice;
-  console.log('Выбор пользователя:', outcome);
-  deferredPrompt = null;
-  installBanner.classList.remove('show');
-});
-
-installClose?.addEventListener('click', () => {
-  installBanner.classList.remove('show');
-  localStorage.setItem('yandex2-install-dismissed', '1');
-});
-
-// Не показываем баннер повторно, если отклонили
-if (localStorage.getItem('yandex2-install-dismissed')) {
-  installBanner?.remove();
-}
-
-// Приложение установлено
-window.addEventListener('appinstalled', () => {
-  showToast('🎉 Yandex2 установлена!');
-  installBanner?.classList.remove('show');
-});
-
-/* ============================================================
-   PWA: ОФЛАЙН-ИНДИКАТОР
-   ============================================================ */
-const offlineBadge = document.getElementById('offlineBadge');
-
-function updateOnline() {
-  if (navigator.onLine) {
-    offlineBadge.classList.remove('show');
-  } else {
-    offlineBadge.classList.add('show');
-  }
-}
-window.addEventListener('online', () => {
-  updateOnline();
-  showToast('✅ Соединение восстановлено');
-});
-window.addEventListener('offline', () => {
-  updateOnline();
-  showToast('📡 Вы офлайн. Работает кэш');
-});
-updateOnline();
-
-/* ============================================================
-   PWA: TOAST
-   ============================================================ */
-function showToast(msg) {
-  const t = document.createElement('div');
-  t.className = 'toast';
-  t.textContent = msg;
-  document.body.appendChild(t);
-  requestAnimationFrame(() => t.classList.add('show'));
-  setTimeout(() => {
-    t.classList.remove('show');
-    setTimeout(() => t.remove(), 400);
-  }, 2600);
-}
-
-/* ============================================================
-   PWA: ОБРАБОТКА ?q= ИЗ SHORTCUTS
-   ============================================================ */
-const urlQ = new URLSearchParams(location.search).get('q');
-if (urlQ) {
-  setTimeout(() => quickSearch(urlQ), 500);
-}
 </script>
 </body>
 </html>
